@@ -2,7 +2,7 @@ import { getPenyedia } from "./endpoints/penyedia.js";
 import { writeSheet } from "./sheets/writeSheet.js";
 
 async function main() {
-  const tahun = 2025;
+  const tahun = 2026;
   const kodeKLPD = "D101"; // <-- KODE KLPD KAMU
 
   console.log("Sync Penyedia...");
