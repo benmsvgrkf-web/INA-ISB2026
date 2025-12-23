@@ -2,5 +2,8 @@
   "name": "ina-isb2026",
   "version": "1.0.0",
   "type": "module",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
 }
