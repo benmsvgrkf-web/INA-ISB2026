@@ -15,6 +15,8 @@ jobs:
 
       - name: Run test
         run: node src/index.js
-        env:
-          INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
-          INAPROC_API_TOKEN: ${{ secrets.INAPROC_API_TOKEN }}
+env:
+  INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
+  INAPROC_API_TOKEN: ${{ secrets.INAPROC_API_TOKEN }}
+  SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+  GOOGLE_SHEET_KEY_JSON: ${{ secrets.GOOGLE_SHEET_KEY_JSON }}
