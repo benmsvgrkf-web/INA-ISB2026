@@ -3,39 +3,46 @@ import { HEADERS } from "../config/inaproc.js";
 export async function fetchAll(url) {
   let allData = [];
   let cursor = null;
-  let hasMore = true;
 
-  while (hasMore) {
+  while (true) {
     const u = new URL(url);
     if (cursor) u.searchParams.set("cursor", cursor);
 
-    const res = await fetch(u, { headers: HEADERS });
+    const res = await fetch(u, {
+      headers: {
+        ...HEADERS,
+        Accept: "application/json"
+      }
+    });
+
     const text = await res.text();
 
     if (!res.ok) {
-      console.error("HTTP STATUS:", res.status);
+      console.error("STATUS:", res.status);
       console.error("RESPONSE:", text.slice(0, 300));
-      throw new Error("HTTP error dari INAPROC");
+      throw new Error("INAPROC HTTP ERROR");
     }
 
-    const json = JSON.parse(text);
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      console.error("Bukan JSON:", text.slice(0, 300));
+      throw new Error("INVALID JSON RESPONSE");
+    }
 
-    // 🔥 WAJIB cek success (INI YANG KAMU LEWAT)
+    // 🔴 PENTING
     if (json.success !== true) {
-      console.error("API SUCCESS = FALSE");
-      console.error(JSON.stringify(json, null, 2));
-      return [];
+      console.error("API ERROR:", json);
+      throw new Error("INAPROC API SUCCESS = FALSE");
     }
 
-    // 🔥 AMBIL DATA SESUAI STANDAR TUTORIAL
-    const records = Array.isArray(json.data) ? json.data : [];
+    if (Array.isArray(json.data)) {
+      allData.push(...json.data);
+    }
 
-    console.log("Fetched records:", records.length);
-    allData.push(...records);
-
-    // 🔥 PAGINATION SESUAI TUTORIAL
-    cursor = json.meta?.cursor;
-    hasMore = json.meta?.has_more === true;
+    if (!json.meta?.has_more) break;
+    cursor = json.meta.cursor;
   }
 
   return allData;
