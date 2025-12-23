@@ -1,5 +1,5 @@
 import { BASE_URL } from "../config/inaproc.js";
-import { fetchAll } from "../services/fetchAll.js";
+import fetchAll from "../services/fetchAll.js";
 
 export async function getPenyedia(tahun, kodeKLPD) {
   const url =
