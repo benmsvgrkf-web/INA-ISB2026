@@ -1,0 +1,20 @@
+name: Test INAPROC Fetch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run test
+        run: node src/index.js
+        env:
+          INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
+          INAPROC_API_TOKEN: ${{ secrets.INAPROC_API_TOKEN }}
