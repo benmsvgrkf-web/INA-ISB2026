@@ -1,12 +1,32 @@
-const res = await fetch(u, { headers: HEADERS });
+import { HEADERS } from "../config/inaproc.js";
 
-const text = await res.text();
-console.log("STATUS:", res.status);
-console.log("RESPONSE (100 char):", text.slice(0, 100));
+export async function fetchAll(url) {
+  let allData = [];
+  let cursor = null;
+  let hasMore = true;
 
-let json;
-try {
-  json = JSON.parse(text);
-} catch (e) {
-  throw new Error("Response bukan JSON");
+  while (hasMore) {
+    const u = new URL(url);
+    if (cursor) u.searchParams.set("cursor", cursor);
+
+    const res = await fetch(u, { headers: HEADERS });
+    const text = await res.text();
+
+    if (!res.ok) {
+      console.error("STATUS:", res.status);
+      console.error("RESPONSE:", text.slice(0, 200));
+      throw new Error("INAPROC response error");
+    }
+
+    const json = JSON.parse(text);
+
+    if (Array.isArray(json.data)) {
+      allData.push(...json.data);
+    }
+
+    cursor = json.meta?.cursor;
+    hasMore = json.meta?.has_more;
+  }
+
+  return allData;
 }
