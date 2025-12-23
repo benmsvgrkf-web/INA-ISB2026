@@ -6,17 +6,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+steps:
+  - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
+  - uses: actions/setup-node@v4
+    with:
+      node-version: 18
 
-      - name: Run test
-        run: node src/index.js
-env:
-  INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
-  INAPROC_API_TOKEN: ${{ secrets.INAPROC_API_TOKEN }}
-  SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
-  GOOGLE_SHEET_KEY_JSON: ${{ secrets.GOOGLE_SHEET_KEY_JSON }}
+  - name: Install dependencies
+    run: npm install
+
+  - name: Run test
+    run: node src/index.js
+    env:
+      INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
+      INAPROC_API_TOKEN: ${{ secrets.INAPROC_API_TOKEN }}
+      SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+      GOOGLE_SHEET_KEY_JSON: ${{ secrets.GOOGLE_SHEET_KEY_JSON }}
