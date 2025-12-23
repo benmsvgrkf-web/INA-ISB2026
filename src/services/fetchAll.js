@@ -1,7 +1,22 @@
-const res = await fetch(u, { headers: HEADERS });
+import { HEADERS } from "../config/inaproc.js";
 
-const text = await res.text();
-console.log("STATUS:", res.status);
-console.log("RESPONSE AWAL:", text.substring(0, 200));
+export async function fetchAll(url) {
+  let allData = [];
+  let cursor = null;
+  let hasMore = true;
 
-const json = JSON.parse(text);
+  while (hasMore) {
+    const u = new URL(url);
+    if (cursor) u.searchParams.set("cursor", cursor);
+
+    const res = await fetch(u, { headers: HEADERS });
+    const json = await res.json();
+
+    allData.push(...json.data);
+
+    cursor = json.meta?.cursor;
+    hasMore = json.meta?.has_more;
+  }
+
+  return allData;
+}
