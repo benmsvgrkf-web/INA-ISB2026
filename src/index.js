@@ -1,19 +1,24 @@
 import { getPenyedia } from "./endpoints/penyedia.js";
+import { getSwakelola } from "./endpoints/swakelola.js";
 import { writeSheet } from "./sheets/writeSheet.js";
 
 async function main() {
-  console.log("Mulai ambil data Penyedia...");
+  const tahun = 2025;
+  const kodeKLPD = "30";
 
-  const tahun = 2026;
-  const kodeKLPD = "D101"; // ganti sesuai instansi
+  console.log("Sync Penyedia");
+  const penyedia = await getPenyedia(tahun, kodeKLPD);
+  await writeSheet("Penyedia", penyedia);
 
-  const data = await getPenyedia(tahun, kodeKLPD);
+  console.log("Sync Swakelola");
+  const swakelola = await getSwakelola(tahun, kodeKLPD);
+  await writeSheet("Swakelola", swakelola);
 
-  console.log("Jumlah data:", data.length);
-
-  await writeSheet("Penyedia", data);
+  // 👉 lanjutkan:
+  // Tender
+  // Non Tender
+  // E-Purchasing
+  // Toko Daring
 }
 
-main().catch(err => {
-  console.error("ERROR:", err);
-});
+main().catch(console.error);
