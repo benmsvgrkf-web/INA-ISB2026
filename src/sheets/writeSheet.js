@@ -20,14 +20,16 @@ export async function writeSheet(sheetName, rows) {
     ...rows.map(row => headers.map(h => row[h] ?? ""))
   ];
 
+  // 🔥 CLEAR HARUS EKSPLISIT
   await sheets.spreadsheets.values.clear({
     spreadsheetId,
-    range: sheetName
+    range: `${sheetName}!A1:ZZ`
   });
 
+  // 🔥 UPDATE HARUS DIMULAI DARI A1
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: sheetName,
+    range: `${sheetName}!A1`,
     valueInputOption: "RAW",
     requestBody: { values }
   });
