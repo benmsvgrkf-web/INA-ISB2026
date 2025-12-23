@@ -1,23 +1,34 @@
-name: Test INAPROC Fetch
+name: Daily INAPROC Sync
 
 on:
+  schedule:
+    # WIB = UTC+7
+    # 06:00 WIB  = 23:00 UTC (hari sebelumnya)
+    # 09:00 WIB  = 02:00 UTC
+    # 12:00 WIB  = 05:00 UTC
+    # 15:00 WIB  = 08:00 UTC
+    # 18:00 WIB  = 11:00 UTC
+    # 21:00 WIB  = 14:00 UTC
+    - cron: '0 23,2,5,8,11,14 * * *'
   workflow_dispatch:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run test
+      - name: Run INAPROC Sync
         run: node src/index.js
         env:
           INAPROC_API_BASE_URL: ${{ secrets.INAPROC_API_BASE_URL }}
