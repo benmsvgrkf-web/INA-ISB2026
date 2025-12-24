@@ -1,12 +1,16 @@
+import { getPenyedia } from "./endpoints/penyedia.js";
 import { writeSheet } from "./sheets/writeSheet.js";
 
 async function main() {
-  const dummy = [
-    { kolom1: "TES", kolom2: 123 },
-    { kolom1: "MASUK", kolom2: 456 }
-  ];
+  const tahun = 2026;
+  const kodeKLPD = "D101";
 
-  await writeSheet("Penyedia", dummy);
+  console.log("Sync Penyedia...");
+  const data = await getPenyedia(tahun, kodeKLPD);
+
+  console.log("TOTAL DATA:", data.length);
+
+  await writeSheet("Penyedia", data);
 }
 
 main().catch(console.error);
