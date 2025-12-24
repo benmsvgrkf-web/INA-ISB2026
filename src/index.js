@@ -3,13 +3,12 @@ import { writeSheet } from "./sheets/writeSheet.js";
 
 async function main() {
   const tahun = 2026;
-  const bulan = 1; // <-- WAJIB ANGKA 1–12
 
   console.log("Sync Penyedia...");
-  const penyedia = await getPenyedia(tahun, bulan);
+  const data = await getPenyedia(tahun);
 
-  console.log("Jumlah data:", penyedia.length);
-  await writeSheet("Penyedia", penyedia);
+  console.log("TOTAL DATA:", data.length);
+  await writeSheet("Penyedia", data);
 }
 
 main().catch(console.error);
