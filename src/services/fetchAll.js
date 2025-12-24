@@ -2,40 +2,27 @@ import { HEADERS } from "../config/inaproc.js";
 
 export async function fetchAll(url) {
   let allData = [];
-  let cursor = null;
+  let cursor;
 
   while (true) {
     const u = new URL(url);
     if (cursor) u.searchParams.set("cursor", cursor);
 
-    const res = await fetch(u, {
-      headers: {
-        ...HEADERS,
-        Accept: "application/json"
-      }
-    });
-
+    const res = await fetch(u, { headers: HEADERS });
     const text = await res.text();
 
     if (!res.ok) {
-      console.error("STATUS:", res.status);
-      console.error("RESPONSE:", text.slice(0, 300));
-      throw new Error("INAPROC HTTP ERROR");
+      console.error("HTTP:", res.status);
+      console.error("BODY:", text.slice(0, 300));
+      throw new Error("INAPROC API ERROR");
     }
 
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch {
-      console.error("Bukan JSON:", text.slice(0, 300));
-      throw new Error("INVALID JSON RESPONSE");
+    // 🔥 CEK BUKAN JSON
+    if (!text.trim().startsWith("{")) {
+      throw new Error("RESPONSE BUKAN JSON: kemungkinan token / URL salah");
     }
 
-    // 🔴 PENTING
-    if (json.success !== true) {
-      console.error("API ERROR:", json);
-      throw new Error("INAPROC API SUCCESS = FALSE");
-    }
+    const json = JSON.parse(text);
 
     if (Array.isArray(json.data)) {
       allData.push(...json.data);
