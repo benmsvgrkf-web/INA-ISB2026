@@ -1,12 +1,12 @@
 import { BASE_URL } from "../config/inaproc.js";
 import { fetchAll } from "../services/fetch_all.js";
 
-export async function getPenyedia(tahun, bulan) {
-  const lpseId = 163;
+export async function getPenyedia(tahun) {
+  const kodeKLPD = "D101";
 
   const url =
-    `${BASE_URL}/v1/rup/rencana/penyedia` +
-    `?lpse_id=${lpseId}&tahun=${tahun}&bulan=${bulan}&limit=100`;
+    `${BASE_URL}/v1/rup/paket-penyedia-terumumkan` +
+    `?kode_klpd=${kodeKLPD}&tahun=${tahun}&limit=100`;
 
   return await fetchAll(url);
 }
